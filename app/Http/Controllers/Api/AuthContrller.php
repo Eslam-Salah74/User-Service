@@ -17,9 +17,8 @@ class AuthContrller extends Controller
         $this->authRepository = $authRepository;
     }
 
-    public function register(RegisterRequest $request)
+    public function register(Request $request)
     {
-
         return $this->authRepository->register($request);
     }
 

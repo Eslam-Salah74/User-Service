@@ -3,16 +3,18 @@ namespace App\Repository\Api\Auth;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Trait\Api\ApiResponseTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Controllers\Api\ApiResponseTrait;
+
+
 
 
 class UserRepository implements UserRepositoryInterface
 {
     use ApiResponseTrait;
 
-    public function register(Request $request)
+    public function register($request)
     {
         $user = User::create([
             'name'     => $request->name,
@@ -22,17 +24,13 @@ class UserRepository implements UserRepositoryInterface
 
         if ($user) {
             $token = $user->createToken('API Token')->accessToken;
-
-            return $this->apiResponse(
-                ['user' => $user, 'token' => $token],
-                201,
-                'User Stored'
-            );
+            return $this->apiResponse(['user' => $user, 'token' => $token],201,'User Stored');
         }
 
         return $this->apiResponse(null, 400, 'Sorry, User Not Stored');
     }
-    // public function login(Request $request)
+
+    // public function login($request)
     // {
     //     $credentials = $request->only('email', 'password');
 
@@ -41,18 +39,15 @@ class UserRepository implements UserRepositoryInterface
     //         $token = $user->createToken('API Token')->accessToken;
 
     //         return $this->apiResponse(
-    //             ['user' => $user, 'token' => $token],
-    //             'Login successful',
-    //             200
-    //         );
+    //             ['user' => $user, 'token' => $token],200  ,'Login successful');
     //     }
 
-    //     return $this->apiResponse(null, 'Invalid credentials', 401);
+    //     return $this->apiResponse(null, 401 ,'Invalid credentials');
     // }
 
 
     // Return One User
-    public function show(Request $request)
+    public function show($request)
     {
         $user = User::find($request->id);
 
@@ -66,12 +61,12 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
-    public function update(Request $request)
+    public function update($request)
     {
         $userupdat = User::find($request->id);
 
         if (!$userupdat) {
-            return $this->apiResponse(null, 404, 'User Not Found');
+            return $this->apiResponse(null, 404,'Sorry This Id Not Found' );
         }
 
         $userupdat->update([

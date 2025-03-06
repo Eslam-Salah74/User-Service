@@ -1,11 +1,11 @@
 <?php
-namespace App\Http\Controllers\Api;
+namespace App\Trait\Api;
 
 trait ApiResponseTrait
 {
     public function apiResponse($data = null,$status =null,$message = null)
     {
-        
+
 
         return response()->json([
             'data' => $data,
