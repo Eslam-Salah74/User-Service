@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace App\Repository\Api\Auth;
 
 use App\Models\User;
@@ -32,21 +32,56 @@ class UserRepository implements UserRepositoryInterface
 
         return $this->apiResponse(null, 400, 'Sorry, User Not Stored');
     }
-    public function login(Request $request)
+    // public function login(Request $request)
+    // {
+    //     $credentials = $request->only('email', 'password');
+
+    //     if (Auth::attempt($credentials)) {
+    //         $user = Auth::user();
+    //         $token = $user->createToken('API Token')->accessToken;
+
+    //         return $this->apiResponse(
+    //             ['user' => $user, 'token' => $token],
+    //             'Login successful',
+    //             200
+    //         );
+    //     }
+
+    //     return $this->apiResponse(null, 'Invalid credentials', 401);
+    // }
+
+
+    // Return One User
+    public function show(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $user = User::find($request->id);
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('API Token')->accessToken;
+        if($user)
+        {
+            return $this->apiResponse($user ,200,'Ok');
+        }
+        else
+        {
+            return $this->apiResponse(null ,404,'Sorry This Id Not Found');
+        }
+    }
 
-            return $this->apiResponse(
-                ['user' => $user, 'token' => $token],
-                'Login successful',
-                200
-            );
+    public function update(Request $request)
+    {
+        $userupdat = User::find($request->id);
+
+        if (!$userupdat) {
+            return $this->apiResponse(null, 404, 'User Not Found');
         }
 
-        return $this->apiResponse(null, 'Invalid credentials', 401);
+        $userupdat->update([
+            'name'  => $request->name ?? $userupdat->name,
+            'email' => $request->email ?? $userupdat->email,
+            'password' => $request->password ? Hash::make($request->password) : $userupdat->password,
+        ]);
+
+        return $this->apiResponse($userupdat, 200, 'User Updated Successfully');
     }
+
+
 }

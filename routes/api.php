@@ -4,8 +4,10 @@ use App\Http\Controllers\Api\AuthContrller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('test',[AuthContrller::class,'test']);
+Route::GET('test',[AuthContrller::class,'test']);
 
-Route::post('/register', [AuthContrller::class, 'register']);
-Route::post('/login', [AuthContrller
-::class, 'login']);
+Route::POST('/register', [AuthContrller::class, 'register']);
+Route::POST('/login', [AuthContrller::class, 'login']);
+
+Route::GET('users/{id}',[AuthContrller::class,'show']);
+Route::PUT('users/{id}',[AuthContrller::class,'update']);
